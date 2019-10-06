@@ -199,7 +199,7 @@ namespace RTS_POE
                         if ((u.GetType()).Equals(typeof(WizardUnit)))
                         {
                             // does fire attack
-                            ((WizardUnit)u).Fireflare(battleMap.units);
+                            ((WizardUnit)u).Fireflare(ref battleMap.units);
                         }
                         else {
                             //does an attack

@@ -190,7 +190,7 @@ namespace RTS_POE
             enemy.Health = enemy.Health - this.attack;
         }
 
-        public void Fireflare(Unit[] units)
+        public void Fireflare(ref Unit[] units)
         {
             // gets top right of attack bounds
             int[] tr = { XPos + 1, YPos + 1 }; 
@@ -199,11 +199,12 @@ namespace RTS_POE
             {
                 if (u.Team!=this.Team)
                 {
-                    if ((u.XPos<=tr[0] && u.XPos>=bl[0] && u.YPos <= tr[1] && u.YPos >= bl[1]) && (u.XPos!=this.XPos && u.YPos!= this.YPos))
+                
+                    if (u.XPos <= tr[0] && u.XPos >= bl[0] && u.YPos <= tr[1] && u.YPos >= bl[1])
                     {
-                        
                         this.combat(u);
                     }
+                    
                 }
             }
         }
