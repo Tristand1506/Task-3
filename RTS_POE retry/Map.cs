@@ -109,10 +109,11 @@ namespace RTS_POE
                 }
 
                 // randomly gives unit type
-                switch (rnd.Next(0, 2))
+                switch (rnd.Next(0, 3))
                 {
                     case 0: units[i] = new MeleeUnit("Bruiser",newX, newY, 200, 1, tempAttack, 1, team, "♣", false); break;
                     case 1: units[i] = new RangeUnit("Ranger",newX, newY, 150, 2, tempAttack, 4, team, "♠", false); break;
+                    case 2: units[i] = new WizardUnit("Warlock", newX, newY, 100, 1, (tempAttack*2), 1, 2, "۝", false); break;
 
                 }
             }
@@ -142,8 +143,10 @@ namespace RTS_POE
             //reset all save locations to blank text...
             File.Create(Environment.CurrentDirectory + "\\MeleeUnits.txt").Close();
             File.Create(Environment.CurrentDirectory + "\\RangeUnits.txt").Close();
+            File.Create(Environment.CurrentDirectory + "\\WizardUnit.txt").Close();
             File.Create(Environment.CurrentDirectory + "\\ResourcesBuildings.txt").Close();
             File.Create(Environment.CurrentDirectory + "\\FactoryBuildings.txt").Close();
+     
             foreach (Unit u in units)
             {
                 u.saveFile();
@@ -169,7 +172,7 @@ namespace RTS_POE
                     //splitting at the comma
                     string[] arrAtributes = input.Split(',');
                     Console.WriteLine(arrAtributes.Length);
-                    //0= team, 1= x, 2= y, 3= health, 4= attack, 5= speed
+                    //0= team, 1= x, 2= y, 3= health, 4= attack, 
                     loadUnits.Add(new RangeUnit("Ranger", Int32.Parse(arrAtributes[1]), Int32.Parse(arrAtributes[2]), Int32.Parse(arrAtributes[3]), 2, Int32.Parse(arrAtributes[4]), 4, Int32.Parse(arrAtributes[0]), "♠", false));
                     input = sr.ReadLine();
                 } while (input!=null);
@@ -183,11 +186,26 @@ namespace RTS_POE
                     //splitting at the comma
                     string[] arrAtributes = input.Split(',');
                     Console.WriteLine(arrAtributes.Length);
-                    //0= team, 1= x, 2= y, 3= health, 4= attack, 5= speed
+                    //0= team, 1= x, 2= y, 3= health, 4= attack, 
                     loadUnits.Add(new MeleeUnit("Bruiser", Int32.Parse(arrAtributes[1]), Int32.Parse(arrAtributes[2]), Int32.Parse(arrAtributes[3]), 1, Int32.Parse(arrAtributes[4]), 1, Int32.Parse(arrAtributes[0]), "♣", false));
                     input = sr.ReadLine();
                 } while (input != null);
                
+            }
+
+            using (StreamReader sr = new StreamReader("WizardUnits.txt"))
+            {
+                string input = sr.ReadLine();
+                do
+                {
+                    //splitting at the comma
+                    string[] arrAtributes = input.Split(',');
+                    Console.WriteLine(arrAtributes.Length);
+                    //0= team, 1= x, 2= y, 3= health, 4= attack,
+                    loadUnits.Add(new WizardUnit("Warlock", Int32.Parse(arrAtributes[1]), Int32.Parse(arrAtributes[2]), Int32.Parse(arrAtributes[3]), 1, Int32.Parse(arrAtributes[4]), 1, 2, "۝", false));
+                    input = sr.ReadLine();
+                } while (input != null);
+
             }
 
             units = loadUnits.ToArray();

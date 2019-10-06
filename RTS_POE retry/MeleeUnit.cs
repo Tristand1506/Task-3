@@ -9,6 +9,8 @@ namespace RTS_POE
 {
     class MeleeUnit : Unit
     {
+        Random rnd = new Random();
+
         // yet another constructor that does constructing
         public MeleeUnit(string name, int xPos, int yPos, int health, int speed, int attack, int attackRange, int team, string symbol, bool isAttacking) : base(xPos, yPos, 110, 1, attack, 1, team, "O", false)
         {
@@ -132,6 +134,13 @@ namespace RTS_POE
             // this is a move method. it makes stuff move based on the two ints given...
         public override void move(int DirectionLR, int DirectionUD)
         {
+            //checks iff they should run
+            if (this.Health <= (this.HealthMax * 0.25))
+            {
+                //runs in a random direction
+                DirectionLR = rnd.Next(0, 3);
+                DirectionUD = rnd.Next(0, 3);
+            }
             // handles the horisontal movement
             switch (DirectionLR)
             {

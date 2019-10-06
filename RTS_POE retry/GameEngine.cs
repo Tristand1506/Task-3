@@ -62,16 +62,24 @@ namespace RTS_POE
                 b.Text = u.Symbol;
                 b.Font = new Font(b.Font.FontFamily, 13);
                 //assigns a color based on unit and team
-                if (u.Team == 0)
-                {
-                    b.BackColor = Color.Black;
-                    b.ForeColor = Color.AntiqueWhite;
+
+                switch (u.Team)
+                { 
+                    case 0:
+                        b.BackColor = Color.Black;
+                        b.ForeColor = Color.AntiqueWhite;
+                        break;
+                    case 1:
+                        b.BackColor = Color.White;
+                        b.ForeColor = Color.Black;
+                        break;
+                    case 2:
+                        b.BackColor = Color.Lavender;
+                        b.ForeColor = Color.RoyalBlue;
+                        break;
+
                 }
-                else
-                {
-                    b.BackColor = Color.AntiqueWhite;
-                    b.ForeColor = Color.Black;
-                }
+                
                 //gives a click event
                 b.Click += unitClick;
                 //adds button to pannle
@@ -177,19 +185,23 @@ namespace RTS_POE
                     unitList.Remove(u);
                     battleMap.units = unitList.ToArray();
                 }
-                //checks iff they should run
-                else if (u.Health <= (u.HealthMax * 0.25))
-                {
-                    //runs in a random direction
-                    u.move(rnd.Next(0, 3), rnd.Next(0, 3));
-                }
+                
                 else
                 {
-                    //chscks if the unite that is closes is in range of attack
+                    //chscks if the unite that is closest is in range of attack
                     if (u.inRange(u.nearby(battleMap.units)))
                     {
-                        //douse an attack
-                        u.combat(u.nearby(battleMap.units));
+                        //checks for special wizard attack
+                        if ((u.GetType()).Equals(typeof(WizardUnit)))
+                        {
+                            // does fire attack
+                            ((WizardUnit)u).Fireflare(battleMap.units);
+                        }
+                        else {
+                            //does an attack
+                            u.combat(u.nearby(battleMap.units));
+
+                        }
                     }
                     //this is where they run headlong at the enemy
                     else
@@ -201,7 +213,7 @@ namespace RTS_POE
                         {
                             u.move(0, 0);
                         }
-                        else if ((u.XPos-enemy.XPos) < 0)
+                        else if ((u.XPos - enemy.XPos) < 0)
                         {
                             u.move(1, 0);
                         }
