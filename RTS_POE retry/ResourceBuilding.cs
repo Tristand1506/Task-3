@@ -41,7 +41,22 @@ namespace RTS_POE
 
         }
 
-       
+        // property for the rGenTotal to make it accesible to the Factory building
+       public int ResorcePool
+        {
+            get { return rGenTotal; }
+            set
+            {
+                if (value < 0)
+                {
+                    rGenTotal = 0;
+                }
+                else
+                {
+                    rGenTotal = value;
+                }
+            }
+        }
 
 
 

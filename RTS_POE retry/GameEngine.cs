@@ -162,9 +162,13 @@ namespace RTS_POE
                         {
                             newUnits[i] = battleMap.units[i];
                         }
-                        newUnits[newUnits.Length-1] = ((FactoryBuilding)b).Spawn();
-
-                        battleMap.units = newUnits;
+                        
+                        if (((FactoryBuilding)b).SourceMaterials(battleMap.buildings))
+                        {
+                            newUnits[newUnits.Length - 1] = ((FactoryBuilding)b).Spawn();
+                            battleMap.units = newUnits;
+                        }
+                        
                     }
                 }
 

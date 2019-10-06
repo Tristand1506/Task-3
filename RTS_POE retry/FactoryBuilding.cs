@@ -47,6 +47,20 @@ namespace RTS_POE
 
         }
 
+        // creates a dynamic cost system for each unit type
+        public int cost
+        {
+            get
+            {
+                switch (unitType)
+                {
+                    // returns cost value...
+                    default: return 25; break;
+                    case 0: return 20; break;
+                    case 1: return 15; break;       
+                }
+            }
+        }
 
         public override void Demolish()
         {
@@ -72,36 +86,68 @@ namespace RTS_POE
             get { return productionSpeed; }
         }
 
-        
-            
-        
-        
+
+
+        public bool SourceMaterials (Building[] buildings)
+        {
+            //sets to max value as a flag.
+            int closestBulding = Int32.MaxValue;
+
+            //max out double to highest int so any distance should be lower than it...
+            double closeestDistance = Int32.MaxValue;
+            int i = 0;
+            foreach (Building b in buildings)
+            {
+                if (b.Team == this.Team && (b.GetType().Equals(typeof(ResourceBuilding))))
+                {
+                    // uses pithag to chek distance...
+                    double distance = Math.Sqrt(Math.Pow(Math.Abs(b.XPos - this.XPos), 2) + Math.Pow(Math.Abs(b.YPos - this.YPos), 2));
+
+                    if ((distance < closeestDistance)&&(((ResourceBuilding)b).ResorcePool - cost < 0))
+                    {
+                        closeestDistance = distance;
+                        closestBulding = i;
+                    }
+                }
+                i++;
+            }
+            if (closestBulding != Int32.MaxValue)
+            {
+                ((ResourceBuilding)buildings[i]).ResorcePool -= cost;
+                return true;
+            }
+            else return false;
+
+
+        }
+
+       
+
 
         public Unit Spawn()
         {
+                // assigns unit x and y values 
+                int newX = spawn[0];
+                int newY = spawn[1];
+                int tempAttack = 0;
 
-            // assigns random x and y values 
-            int newX = spawn[0];
-            int newY = spawn[1];
-            int tempAttack = 0;
+                // randomly assigns units damage values
+                switch (rnd.Next(0, 4))
+                {
+                    case 0: tempAttack = 5; break;
+                    case 1: tempAttack = 10; break;
+                    case 2: tempAttack = 15; break;
+                    case 3: tempAttack = 20; break;
+                }
 
-            // randomly assigns units damage values
-            switch (rnd.Next(0, 4))
-            {
-                case 0: tempAttack = 5; break;
-                case 1: tempAttack = 10; break;
-                case 2: tempAttack = 15; break;
-                case 3: tempAttack = 20; break;
-            }
+                // gives unit type
+                switch (unitType)
+                {
+                    default: return new MeleeUnit("Bruiser", newX, newY, 300, 1, tempAttack, 1, team, "♣", false); break;
+                    case 0: return new MeleeUnit("Bruiser", newX, newY, 300, 1, tempAttack, 1, team, "♣", false); break;
+                    case 1: return new RangeUnit("Ranger", newX, newY, 150, 2, tempAttack, 4, team, "♠", false); break;
 
-            // gives unit type
-            switch (unitType)
-            {
-                default: return new MeleeUnit("Bruiser", newX, newY, 300, 1, tempAttack, 1, team, "♣", false); break;
-                case 0:  return new MeleeUnit("Bruiser", newX, newY, 300, 1, tempAttack, 1, team, "♣", false); break;
-                case 1: return new RangeUnit("Ranger", newX, newY, 150, 2, tempAttack, 4, team, "♠", false); break;
-
-            } 
+                }
 
         }
 
