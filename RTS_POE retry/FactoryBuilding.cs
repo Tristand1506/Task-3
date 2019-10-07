@@ -103,6 +103,7 @@ namespace RTS_POE
                     // uses pithag to chek distance...
                     double distance = Math.Sqrt(Math.Pow(Math.Abs(b.XPos - this.XPos), 2) + Math.Pow(Math.Abs(b.YPos - this.YPos), 2));
 
+                    //checks if this building can supply the resources and if its closer...
                     if ((distance < closeestDistance)&&(((ResourceBuilding)b).ResorcePool - cost > 0))
                     {
                         closeestDistance = distance;
@@ -111,8 +112,10 @@ namespace RTS_POE
                 }
                 i++;
             }
+            // checks if flag has changed 
             if (closestBulding != Int32.MaxValue)
             {
+                // subtracts resource from the pool...
                 ((ResourceBuilding)buildings[closestBulding]).ResorcePool -= cost;
                 return true;
             }

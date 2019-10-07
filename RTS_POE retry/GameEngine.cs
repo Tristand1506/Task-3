@@ -36,7 +36,7 @@ namespace RTS_POE
             pnlBattelField = pnl;
         }
 
-
+        // round property
         public int Round
         {
             get { return round; }
@@ -141,10 +141,12 @@ namespace RTS_POE
             }
         }
 
+        // triggers the buildings actions
         public void UpdateBuilding()
         {
             foreach (Building b in battleMap.buildings)
             {
+                // checks if  building is dead...
                 if (b.Health <= 0)
                 {
                     
@@ -171,6 +173,7 @@ namespace RTS_POE
                             newUnits[i] = battleMap.units[i];
                         }
                         
+                        // cheks if resources ar avaliable to spawn a unit
                         if (((FactoryBuilding)b).SourceMaterials(battleMap.buildings))
                         {
                             newUnits[newUnits.Length - 1] = ((FactoryBuilding)b).Spawn();

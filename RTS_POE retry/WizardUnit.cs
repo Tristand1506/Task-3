@@ -13,6 +13,7 @@ namespace RTS_POE
 
         Random rnd = new Random();
 
+        // wizard constructor
         public WizardUnit(string name, int xPos, int yPos, int health, int speed, int attack, int attackRange, int team, string symbol, bool isAttacking) : base(xPos, yPos, 70, 1, attack, 2, team, "U", false)
         {
             HEALTH_MAX = 100;
@@ -28,7 +29,9 @@ namespace RTS_POE
             this.isAttacking = isAttacking;
         }
 
-        
+        /// <summary>
+        /// Propperties
+        /// </summary>
 
         public int XPos
         { get { return this.xPos; } set { xPos = value; } }
@@ -117,7 +120,7 @@ namespace RTS_POE
             } */
         }
 
-
+        /// METHODS
 
         public override void move(int DirectionLR, int DirectionUD)
         {
