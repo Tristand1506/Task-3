@@ -98,12 +98,12 @@ namespace RTS_POE
             int i = 0;
             foreach (Building b in buildings)
             {
-                if (b.Team == this.Team && (b.GetType().Equals(typeof(ResourceBuilding))))
+                if (b.Team == this.Team && b.GetType().Equals(typeof(ResourceBuilding)))
                 {
                     // uses pithag to chek distance...
                     double distance = Math.Sqrt(Math.Pow(Math.Abs(b.XPos - this.XPos), 2) + Math.Pow(Math.Abs(b.YPos - this.YPos), 2));
 
-                    if ((distance < closeestDistance)&&(((ResourceBuilding)b).ResorcePool - cost < 0))
+                    if ((distance < closeestDistance)&&(((ResourceBuilding)b).ResorcePool - cost > 0))
                     {
                         closeestDistance = distance;
                         closestBulding = i;
@@ -113,7 +113,7 @@ namespace RTS_POE
             }
             if (closestBulding != Int32.MaxValue)
             {
-                ((ResourceBuilding)buildings[i]).ResorcePool -= cost;
+                ((ResourceBuilding)buildings[closestBulding]).ResorcePool -= cost;
                 return true;
             }
             else return false;

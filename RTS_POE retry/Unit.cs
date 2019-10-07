@@ -138,12 +138,16 @@ namespace RTS_POE
 
 
         public abstract void combat( Unit enemy);
+        public abstract void combat( Building enemy);
+
 
 
         public abstract bool inRange(Unit enemy);
+        public abstract bool inRange(Building enemy);
 
 
         public abstract Unit nearby(Unit[] units);
+        public abstract Building nearby(Building[] buildings);
 
         public abstract void death();
 

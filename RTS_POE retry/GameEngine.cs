@@ -17,7 +17,7 @@ namespace RTS_POE
         Object selected;
 
         //builds map and sets number of starting units and buildings
-        public Map battleMap = new Map(10,5);
+        public Map battleMap = new Map(20,10);
 
         //global random number generator
         Random rnd = new Random();
@@ -145,6 +145,14 @@ namespace RTS_POE
         {
             foreach (Building b in battleMap.buildings)
             {
+                if (b.Health <= 0)
+                {
+                    
+                    //deletes from array cause i coulnt figure out how to do this from the subclass death method.
+                    var buildingList = battleMap.buildings.ToList();
+                    buildingList.Remove(b);
+                    battleMap.buildings = buildingList.ToArray();
+                }
                 //checks building subclass type
                 if ((b.GetType()).Equals(typeof(ResourceBuilding)))
                 {
@@ -184,6 +192,13 @@ namespace RTS_POE
                 //checks if they should die
                 if (u.Health<=0)
                 {
+                    foreach (Building b in battleMap.buildings)
+                    {
+                        if (b.Team!=u.Team && b.GetType().Equals(typeof(ResourceBuilding)))
+                        {
+                            ((ResourceBuilding)b).ResorcePool += 10;
+                        }
+                    }
                     //deletes from array cause i coulnt figure out how to do this from the subclass death method.
                     var unitList = battleMap.units.ToList();
                     unitList.Remove(u);
@@ -192,7 +207,7 @@ namespace RTS_POE
                 
                 else
                 {
-                    //chscks if the unite that is closest is in range of attack
+                    //chscks if the unit that is closest is in range of attack
                     if (u.inRange(u.nearby(battleMap.units)))
                     {
                         //checks for special wizard attack
@@ -207,17 +222,48 @@ namespace RTS_POE
 
                         }
                     }
+                    else if (u.inRange(u.nearby(battleMap.buildings)))
+                    {
+                        //checks for special wizard attack
+                        if ((u.GetType()).Equals(typeof(WizardUnit)))
+                        {
+                            
+                            
+                        }
+                        else
+                        {
+                            //does an attack
+                            u.combat(u.nearby(battleMap.buildings));
+
+                        }
+                    }
                     //this is where they run headlong at the enemy
                     else
                     {
-                        Unit enemy = u.nearby(battleMap.units);
+                        Building enemyBuilding  = u.nearby(battleMap.buildings);
+                        Unit enemyUnit = u.nearby(battleMap.units);
+                        double distanceUnit = Math.Sqrt(Math.Pow(Math.Abs(enemyUnit.XPos - u.XPos), 2) + Math.Pow(Math.Abs(enemyUnit.YPos - u.YPos), 2));
+                        double distanceBuilding = Math.Sqrt(Math.Pow(Math.Abs(enemyBuilding.XPos - u.XPos), 2) + Math.Pow(Math.Abs(enemyBuilding.YPos - u.YPos), 2));
+
+                        int[] enemy = new int[2];
+
+                        if (distanceBuilding >= distanceUnit || u.GetType().Equals(typeof(WizardUnit)))
+                        {
+                            enemy[0] = enemyUnit.XPos;
+                            enemy[1] = enemyUnit.YPos;
+                        }
+                        else
+                        {
+                            enemy[0] = enemyBuilding.XPos;
+                            enemy[1] = enemyBuilding.YPos;
+                        }
 
                         // horisontal check
-                        if ((u.XPos - enemy.XPos) == 0)
+                        if ((u.XPos - enemy[0]) == 0)
                         {
                             u.move(0, 0);
                         }
-                        else if ((u.XPos - enemy.XPos) < 0)
+                        else if ((u.XPos - enemy[0]) < 0)
                         {
                             u.move(1, 0);
                         }
@@ -227,11 +273,11 @@ namespace RTS_POE
                         }
 
                         //vertical check
-                        if ((u.YPos - enemy.YPos) == 0)
+                        if ((u.YPos - enemy[1]) == 0)
                         {
                             u.move(0, 0);
                         }
-                        else if ((u.YPos - enemy.YPos) < 0)
+                        else if ((u.YPos - enemy[1]) < 0)
                         {
                             u.move(0, 1);
                         }

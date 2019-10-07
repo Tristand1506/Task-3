@@ -42,7 +42,20 @@ namespace RTS_POE
         public int maxHP { get { return health; } }
 
         //no sets required...
-        public int Health { get { return health; } }
+        public int Health
+        {
+            get { return health; }
+            set
+            {
+                if (value<0)
+                {
+                    health = 0;
+                }
+                else
+                {
+                    health = value;
+                }
+            } }
 
         public int Team { get { return team; } set { team = value; } }
 

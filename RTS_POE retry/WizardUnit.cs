@@ -185,7 +185,14 @@ namespace RTS_POE
 
 
         }
+
+        // does the combat thing
         public override void combat(Unit enemy)
+        {
+            enemy.Health = enemy.Health - this.attack;
+        }
+        // does the combat thing but buildings
+        public override void combat(Building enemy)
         {
             enemy.Health = enemy.Health - this.attack;
         }
@@ -208,7 +215,21 @@ namespace RTS_POE
                 }
             }
         }
-
+        // checks if the given Building is in attacking range
+        public override bool inRange(Building enemy)
+        {
+            // creates  a distance based on pi-thag
+            double distance = Math.Sqrt(Math.Pow(Math.Abs(enemy.XPos - this.XPos), 2) + Math.Pow(Math.Abs(enemy.YPos - this.YPos), 2));
+            if (distance <= AttackRange)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        // checks if the given Unit is in attacking range
         public override bool inRange(Unit enemy)
         {
             double distance = Math.Sqrt(Math.Pow(Math.Abs(enemy.XPos - this.XPos), 2) + Math.Pow(Math.Abs(enemy.YPos - this.YPos), 2));
@@ -224,6 +245,7 @@ namespace RTS_POE
 
         public override Unit nearby(Unit[] units)
         {
+            //self set as default so if left as last one alive will off them selfes due to PTSD...
             Unit closestUnit = this;
             double closeestDistance = Int32.MaxValue;
 
@@ -243,6 +265,30 @@ namespace RTS_POE
             return closestUnit;
 
 
+        }
+        //cheks nearest building
+        public override Building nearby(Building[] building)
+        {
+            //self set as default so if left as last one alive will off them selfes due to PTSD...
+            Building closestBuilding = null;
+
+            //max out double to highest int so any distance should be lower than it...
+            double closeestDistance = Int32.MaxValue;
+
+            foreach (Building u in building)
+            {
+                if (u.Team != this.Team)
+                {
+                    double distance = Math.Sqrt(Math.Pow(Math.Abs(u.XPos - this.XPos), 2) + Math.Pow(Math.Abs(u.YPos - this.YPos), 2));
+
+                    if (distance < closeestDistance)
+                    {
+                        closeestDistance = distance;
+                        closestBuilding = u;
+                    }
+                }
+            }
+            return closestBuilding;
         }
 
         public override void death()
